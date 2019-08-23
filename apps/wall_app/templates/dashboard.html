@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>The Wall</title>
+</head>
+
+<body>
+    <h1> Welcome {{request.post_creator.first_name}}</h1>
+    <a href="/logout">Logout</a><br><br>
+    <h1> The Wall</h1>
+
+
+    <h2> Post on Wall </h2>
+    <form action="/posting" method="POST">
+        {% csrf_token %}
+        <textarea name="wall_post"> </textarea>
+        <button type="submit" class="btn btn-primary">submit post</button>
+    </form>
+    <h3>Wall Posts:</h3>
+    <p></p>
+    {% for post in all_posts %}
+    <p>name of user: {{ post.user.first_name }}</p>
+    <p>post: {{ post.wall_post }}</p>
+        <p>comments on this message:</p>
+        {% for comm in post.wall_post_Comment.all %}
+        <p> {{ comm.text }} </p>
+        <a href="/{{comm.id}}/delete_comment">delete</a>
+        {% endfor %}
+        <p>
+            <form action="/Comments" method="POST">
+                {% csrf_token %}
+                <input type="text" name="text">
+                <input type="hidden" name="wall_post_id" value="{{post.id}}"><br>
+                <button type="submit" class="btn btn-primary">post comment</button>
+            
+            </form>
+        </p>
+        <p>__________________________________</p>
+        {% endfor %}
+
+</body>
+
+</html>
